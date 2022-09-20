@@ -1,0 +1,13 @@
+title: 'Fractional Shares',
+            body:
+                "Instead of having to buy an entire share, invest any amount you want.",
+            image: Image.asset('assets/img1.jpg'),
+
+title: 'Kids and teens',
+            body:
+                "Kids and teens can track their stocks 24/7 and place trades that you approve.",
+            image: Image.asset('assets/img2.jpg'),
+
+title: "Title of last page - reversed",
+
+

@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:introduction_screen/introduction_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,261 +14,106 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final _formKey = GlobalKey<FormState>();
-  final _controllerFullname = TextEditingController();
-  final _controllerUserName = TextEditingController();
-  final _controllerPassword = TextEditingController();
-  var _gender = "Laki - Laki";
-  var _selectDays = [];
-  double _curentSlider = 10;
+  final introKey = GlobalKey<IntroductionScreenState>();
 
-  List<String> _days = [
-    "senin",
-    "selasa",
-    "rabu",
-    "kamis",
-    "Jumat",
-    "sabtu",
-    "Minggu"
-  ];
-
-  var _passwordVisible = false;
-  @override
+  var pageDecoration = const PageDecoration(
+    titleTextStyle: TextStyle(fontSize: 28, fontWeight: FontWeight.w700),
+    bodyTextStyle: TextStyle(fontSize: 18),
+    bodyPadding: EdgeInsets.fromLTRB(16, 0, 16, 16),
+    pageColor: Colors.white,
+    imagePadding: EdgeInsets.zero,
+  );
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            "Material App Alfian",
-            style: TextStyle(color: Colors.black),
-          ),
-          backgroundColor: Colors.greenAccent,
-        ),
-        body: Center(
-          child: ListView(
-            children: [
-              _sizeBox(10),
-              const ListTile(
-                // contentPadding: EdgeInsets.symmetric(horizontal: 100),
-                title: Text(
-                  "Register",
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
+      home: IntroductionScreen(
+        key: introKey,
+        globalHeader: Align(
+          alignment: Alignment.topRight,
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 16, right: 16),
+              child: Container(
+                width: 150,
+                child: Image.asset('asset/flutter.png'),
               ),
-              _sizeBox(10),
-              _userNamePassword(),
-              _sizeBox(10),
-              _listTitle("Umur"),
-              _slider(),
-              _sizeBox(10),
-              _listTitle("Gender"),
-              _genderRadio(),
-              _sizeBox(10),
-              _listTitle("Pilih Hari Kerja"),
-              _checkBox(),
-              _sizeBox(40),
-              _buttonRegister(),
-              _sizeBox(20)
-            ],
+            ),
           ),
         ),
-      ),
-    );
-  }
-
-  Slider _slider() {
-    return Slider(
-      activeColor: Colors.redAccent,
-      thumbColor: Colors.green,
-      inactiveColor: Colors.green,
-      max: 50,
-      min: 10,
-      divisions: 50,
-      label: _curentSlider.round().toString(),
-      value: _curentSlider,
-      onChanged: (value) {
-        setState(() => _curentSlider = value);
-      },
-    );
-  }
-
-  ListTile _listTitle(String value) {
-    return ListTile(
-      title: Text(
-        "$value ",
-        style:
-            const TextStyle(fontWeight: FontWeight.w900, color: Colors.green),
-      ),
-    );
-  }
-
-  SizedBox _sizeBox(double value) {
-    return SizedBox(
-      height: value,
-    );
-  }
-
-  Padding _genderRadio() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 14),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Expanded(
-            child: Row(
-              children: [
-                Radio(
-                  activeColor: Colors.green,
-                  value: "Laki - Laki",
-                  groupValue: _gender,
-                  onChanged: (value) {
-                    setState(() => _gender = value.toString());
-                  },
-                ),
-                Expanded(
-                  child: Text("Laki-Laki"),
-                )
-              ],
-            ),
-            flex: 1,
+        pages: [
+          PageViewModel(
+            title: 'Fractional Shares',
+            body:
+                "Instead of having to buy an entire share, invest any amount you want.",
+            image: Image.asset('asset/img1.jpg'),
+            decoration: pageDecoration,
           ),
-          Expanded(
-            child: Row(
-              children: [
-                Radio(
-                  activeColor: Colors.green,
-                  value: "Perempuan",
-                  groupValue: _gender,
-                  onChanged: (value) {
-                    setState(() => _gender = value.toString());
-                  },
-                ),
-                Expanded(
-                  child: Text("Perempuan"),
-                )
-              ],
+          PageViewModel(
+            title: 'Kids and teens',
+            body:
+                "Kids and teens can track their stocks 24/7 and place trades that you approve.",
+            image: Image.asset('asset/img2.jpg'),
+            decoration: pageDecoration,
+          ),
+          PageViewModel(
+            title: "Title of last page - reversed",
+            bodyWidget: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
             ),
+            reverse: true,
+            image: Image.asset('asset/img3.jpg'),
+            decoration: pageDecoration.copyWith(
+                bodyFlex: 2,
+                imageFlex: 3,
+                bodyAlignment: Alignment.bottomCenter,
+                imageAlignment: Alignment.topCenter),
           ),
         ],
-      ),
-    );
-  }
-
-  Column _checkBox() {
-    return Column(
-        children: List.generate(_days.length, (index) {
-      String day = _days[index];
-      return CheckboxListTile(
-        activeColor: Colors.green,
-        title: Text(day),
-        value: _selectDays.contains(day),
-        onChanged: (value) {
-          if (value!) {
-            _selectDays.add(day);
-          } else {
-            _selectDays.remove(day);
-          }
-          setState(() {});
-          print(_selectDays);
-        },
-      );
-    }));
-  }
-
-  Padding _userNamePassword() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            TextFormField(
-              validator: (value) => value == '' ? "Dont Empty" : null,
-              controller: _controllerFullname,
-              decoration: const InputDecoration(
-                labelText: 'Fullname',
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.green),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blueAccent),
-                ),
-              ),
-            ),
-            TextFormField(
-              validator: (value) => value == '' ? "Dont Empty" : null,
-              controller: _controllerUserName,
-              decoration: const InputDecoration(
-                labelText: 'Username',
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.green),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blueAccent),
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextFormField(
-              obscureText: !_passwordVisible,
-              validator: (value) => value == '' ? "Dont Empty" : null,
-              controller: _controllerPassword,
-              decoration: InputDecoration(
-                labelText: 'Password',
-                enabledBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.green),
-                ),
-                focusedBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blueAccent),
-                ),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    // Based on passwordVisible state choose the icon
-                    _passwordVisible ? Icons.visibility : Icons.visibility_off,
-                    color: Colors.green,
-                  ),
-                  onPressed: () {
-                    // Update the state i.e. toogle the state of passwordVisible variable
-                    setState(
-                      () {
-                        _passwordVisible = !_passwordVisible;
-                      },
-                    );
-                  },
-                ),
-              ),
-            ),
-          ],
+        onDone: () => Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => const HomePage())),
+        onSkip: () => Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => const HomePage())),
+        showSkipButton: true,
+        skip: const Text(
+          'Skip',
+          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
         ),
-      ),
-    );
-  }
-
-  Padding _buttonRegister() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 18),
-      child: ElevatedButton(
-        onPressed: () {
-          if (_formKey.currentState!.validate()) {
-            print(_controllerUserName.text);
-            print(_controllerUserName.text);
-          }
-        },
-        child: Text('Register'),
-        style: ElevatedButton.styleFrom(
-            padding: EdgeInsets.symmetric(vertical: 20),
-            primary: Colors.green,
+        done: const Text(
+          'Done',
+          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
+        ),
+        next: const Icon(Icons.arrow_forward),
+        controlsMargin: const EdgeInsets.all(16),
+        curve: Curves.fastLinearToSlowEaseIn,
+        controlsPadding: kIsWeb
+            ? const EdgeInsets.all(12)
+            : const EdgeInsets.fromLTRB(8, 4, 8, 4),
+        dotsDecorator: DotsDecorator(
+          size: const Size(10, 10),
+          color: const Color(0xFFBDBDBD),
+          activeSize: const Size(22, 10),
+          activeShape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+        ),
+        dotsContainerDecorator: ShapeDecoration(
+            color: Colors.black,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
       ),
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  const HomePage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Home Page'),
+      ),
+      body: Center(child: const Text('Halaman Home Page')),
     );
   }
 }
