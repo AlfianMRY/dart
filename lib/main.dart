@@ -1,119 +1,155 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:introduction_screen/introduction_screen.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
+// Package Animated
+
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<MyApp> createState() => _MyApp();
 }
 
-class _MyAppState extends State<MyApp> {
-  final introKey = GlobalKey<IntroductionScreenState>();
-
-  var pageDecoration = const PageDecoration(
-    titleTextStyle: TextStyle(fontSize: 28, fontWeight: FontWeight.w700),
-    bodyTextStyle: TextStyle(fontSize: 18),
-    bodyPadding: EdgeInsets.fromLTRB(16, 0, 16, 16),
-    pageColor: Colors.white,
-    imagePadding: EdgeInsets.zero,
-  );
+class _MyApp extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: IntroductionScreen(
-        key: introKey,
-        globalHeader: Align(
-          alignment: Alignment.topRight,
-          child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 16, right: 16),
-              child: Container(
-                width: 150,
-                child: Image.asset('asset/flutter.png'),
+      title: 'Animated Flutter',
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Animate Package'),
+        ),
+        body: SpinKitCircle(
+          itemBuilder: (context, index) {
+            return DecoratedBox(
+              decoration: BoxDecoration(
+                color: index.isEven ? Colors.green : Colors.red,
+                shape: BoxShape.circle,
               ),
-            ),
-          ),
+            );
+          },
         ),
-        pages: [
-          PageViewModel(
-            title: 'Fractional Shares',
-            body:
-                "Instead of having to buy an entire share, invest any amount you want.",
-            image: Image.asset('asset/img1.jpg'),
-            decoration: pageDecoration,
-          ),
-          PageViewModel(
-            title: 'Kids and teens',
-            body:
-                "Kids and teens can track their stocks 24/7 and place trades that you approve.",
-            image: Image.asset('asset/img2.jpg'),
-            decoration: pageDecoration,
-          ),
-          PageViewModel(
-            title: "Title of last page - reversed",
-            bodyWidget: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-            ),
-            reverse: true,
-            image: Image.asset('asset/img3.jpg'),
-            decoration: pageDecoration.copyWith(
-                bodyFlex: 2,
-                imageFlex: 3,
-                bodyAlignment: Alignment.bottomCenter,
-                imageAlignment: Alignment.topCenter),
-          ),
-        ],
-        onDone: () => Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => const HomePage())),
-        onSkip: () => Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => const HomePage())),
-        showSkipButton: true,
-        skip: const Text(
-          'Skip',
-          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
-        ),
-        done: const Text(
-          'Done',
-          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
-        ),
-        next: const Icon(Icons.arrow_forward),
-        controlsMargin: const EdgeInsets.all(16),
-        curve: Curves.fastLinearToSlowEaseIn,
-        controlsPadding: kIsWeb
-            ? const EdgeInsets.all(12)
-            : const EdgeInsets.fromLTRB(8, 4, 8, 4),
-        dotsDecorator: DotsDecorator(
-          size: const Size(10, 10),
-          color: const Color(0xFFBDBDBD),
-          activeSize: const Size(22, 10),
-          activeShape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-        ),
-        dotsContainerDecorator: ShapeDecoration(
-            color: Colors.black,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
       ),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home Page'),
-      ),
-      body: Center(child: const Text('Halaman Home Page')),
-    );
-  }
-}
+// Animated Explicit dan ixplicit
+// class MyApp extends StatefulWidget {
+//   const MyApp({Key? key}) : super(key: key);
+//   @override
+//   State<MyApp> createState() => _MyAppState();
+// }
+// class _MyAppState extends State<MyApp> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return const MaterialApp(
+//       title: "flutter animate",
+//       home: MyHomePage(titles: 'Flutter animation'),
+//       debugShowMaterialGrid: false,
+//     );
+//   }
+// }
+// class MyHomePage extends StatefulWidget {
+//   const MyHomePage({Key? key, required this.titles}) : super(key: key);
+//   final titles;
+//   @override
+//   State<MyHomePage> createState() => _MyHomePageState();
+// }
+// class _MyHomePageState extends State<MyHomePage>
+//     with SingleTickerProviderStateMixin {
+//   // double width = 100;
+//   // double height = 100;
+//   // double opacity = 1;
+//   // double padding = 10;
+//   // Color color = Colors.green.shade400;
+//   late AnimationController controller;
+//   @override
+//   void initState() {
+//     super.initState();
+//     controller = AnimationController(
+//       vsync: this,
+//       duration: const Duration(seconds: 1),
+//       reverseDuration: Duration(seconds: 1),
+//       lowerBound: 0,
+//       upperBound: 100,
+//     );
+//     controller.addListener(() {
+//       print(controller.value);
+//       setState(() {});
+//     });
+//     // controller.forward();
+//     // controller.reverse();
+//     controller.repeat();
+//   }
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: const Text('Animation flutter')),
+//       body: Center(
+//         // Animated Explicit
+//         child: Container(
+//           padding: EdgeInsets.only(
+//             top: controller.value,
+//           ),
+//           child: Container(
+//             width: 100,
+//             height: 100,
+//             color: Colors.green,
+//           ),
+//         ),
+//         // Animated Ixplicut
+//         // Animation Padding
+//         // child: AnimatedPadding(
+//         //   padding: EdgeInsets.symmetric(horizontal: padding),
+//         //   duration: Duration(milliseconds: 100),
+//         //   child: Container(
+//         //     color: color,
+//         //     height: height,
+//         //   ),
+//         // ),
+//         // Animation Opacity
+//         //child: AnimatedOpacity(
+//         //   opacity: opacity,
+//         //   duration: Duration(seconds: 1),
+//         //   child: Container(
+//         //     width: width,
+//         //     height: height,
+//         //     color: Colors.red,
+//         //   ),
+//         // ),
+//         // Animation Container
+//         // child: AnimatedContainer(
+//         //   width: width,
+//         //   height: height,
+//         //   color: color,
+//         //   duration: Duration(milliseconds: 500),
+//         // ),
+//       ),
+//       floatingActionButton: FloatingActionButton(
+//         onPressed: () {
+//           setState(() {
+//             // Animated Explicit
+//             // Animated Ixplicit
+//             // Animation Padding
+//             // padding = padding == 10 ? 40 : 10;
+//             // animation Opacity
+//             // opacity = opacity == 1 ? 0.2 : 1;
+//             // Animation Container
+//             //   width = width == 100 ? 200 : 100;
+//             //   height = height == 100 ? 200 : 100;
+//             //   color = color == Colors.green.shade400
+//             //       ? Colors.green.shade100
+//             //       : Colors.green.shade400;
+//           });
+//         },
+//         child: const Icon(Icons.swap_horizontal_circle_outlined),
+//       ),
+//     );
+//   }
+// }
