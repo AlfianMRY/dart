@@ -1,10 +1,27 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:workmanager/workmanager.dart';
 
-import 'package:cron/cron.dart';
+namaFunction() {
+  print("Hello World!!!!!!!!!!!!!!!!!!!!!!");
+}
 
-void main() {
+var task = 'Ini hari Jum\'at';
+
+void cobaWorkmanager() {
+  Workmanager().executeTask((taskName, inputData) {
+    switch (taskName) {
+      case 'ini workmanager':
+        namaFunction();
+        break;
+      default:
+    }
+    return Future.value(true);
+  });
+}
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Workmanager().initialize(cobaWorkmanager, isInDebugMode: true);
   runApp(const MyApp());
 }
 
@@ -13,20 +30,25 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: CobaCron(),
+    return const MaterialApp(
+      home: CobaWorkManager(),
     );
   }
 }
 
-class CobaCron extends StatelessWidget {
-  CobaCron({Key? key}) : super(key: key);
+class CobaWorkManager extends StatefulWidget {
+  const CobaWorkManager({Key? key}) : super(key: key);
 
+  @override
+  State<CobaWorkManager> createState() => _CobaWorkManagerState();
+}
+
+class _CobaWorkManagerState extends State<CobaWorkManager> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Belajar Cron'),
+        title: const Text("Belajar Workmanager"),
       ),
       body: Center(
         child: Column(
@@ -35,48 +57,74 @@ class CobaCron extends StatelessWidget {
             MaterialButton(
               color: Colors.blue,
               onPressed: () {
-                jadwal();
+                print("Wait for workmanager");
+                var waktu = DateTime.now();
+                Workmanager().registerOneOffTask("Hallo", task,
+                    initialDelay: Duration(seconds: 15),
+                    inputData: {
+                      'Waktu': '$waktu',
+                      'tanggal': 23,
+                      'hari': 'jum\'at'
+                    },
+                    constraints:
+                        Constraints(networkType: NetworkType.connected));
               },
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  'Memulai Jadwal',
-                  style: TextStyle(color: Colors.white, fontSize: 22),
-                ),
+              child: Text(
+                "Start",
+                style: TextStyle(color: Colors.white, fontSize: 18),
               ),
             ),
             const SizedBox(
-              height: 22,
+              height: 20,
             ),
             MaterialButton(
               color: Colors.blue,
-              onPressed: () => cancelJadwal(),
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  'Cancel Jadwal',
-                  style: TextStyle(color: Colors.white, fontSize: 22),
-                ),
+              onPressed: () {
+                print("Wait for 60 workmanager");
+                var waktu = DateTime.now();
+                Workmanager().registerOneOffTask("Selamat", task,
+                    initialDelay: Duration(seconds: 60),
+                    inputData: {
+                      'benar/salah': true,
+                      'tanggal': 23,
+                      'hari': 'jum\'at'
+                    },
+                    constraints:
+                        Constraints(networkType: NetworkType.connected));
+              },
+              child: Text(
+                "60 Detik",
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            MaterialButton(
+              color: Colors.blue,
+              onPressed: () {
+                Workmanager().cancelAll();
+                print("Telah dicancel");
+              },
+              child: Text(
+                "Cancel",
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+            ),
+            MaterialButton(
+              color: Colors.blue,
+              onPressed: () {
+                Workmanager().cancelByUniqueName('Selamat');
+                print("Telah dicancel");
+              },
+              child: Text(
+                "Cancel using by unique name",
+                style: TextStyle(color: Colors.white, fontSize: 18),
               ),
             ),
           ],
         ),
       ),
     );
-  }
-
-  final cron = Cron();
-  ScheduledTask? task;
-
-  void jadwal() {
-    log("wait for schedule");
-    task = cron.schedule(Schedule.parse('*/1 * * * *'), () async {
-      print("Waktu sekarang : ${DateTime.now()}");
-    });
-  }
-
-  void cancelJadwal() {
-    task!.cancel();
-    print('Berhasil cancel jadwal');
   }
 }
