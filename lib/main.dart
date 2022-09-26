@@ -51,6 +51,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   Consumer<MerubahWarna>(
                     builder: (context, tema, _) => Switch(
+                        activeColor: Colors.green,
+                        inactiveThumbColor: Colors.blue,
+                        inactiveTrackColor: Colors.blue.shade100,
                         value: tema.isWarna,
                         onChanged: (value) {
                           tema.isWarna = value;
